@@ -28,10 +28,8 @@ def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
         
         expected_signature = "sha256=" + hash_object.hexdigest()
         
-        print(signature_header, expected_signature)
         return hmac.compare_digest(signature_header, expected_signature)
     except Exception:
-        print(f"Error verifying GitHub signature:\n{traceback.format_exc()}")
         return False
 
 @app.post("/webhook")
@@ -43,12 +41,8 @@ async def github_webhook(
     # Get the raw request body
     payload_body = await request.body()
     
-    print(x_github_event)
-    print(x_hub_signature_256)
-    
     # Verify GitHub signature
     if not verify_github_signature(payload_body, x_hub_signature_256):
-        print("Invalid signature")
         raise HTTPException(status_code=401, detail="Invalid signature")
     
     # Parse the JSON payload
