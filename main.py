@@ -7,9 +7,6 @@ import hashlib
 import json
 import subprocess
 from typing import Optional
-from dotenv import load_dotenv
-
-load_dotenv(".env", override=True)
 
 app = FastAPI()
 
@@ -66,16 +63,7 @@ async def github_webhook(
         if payload.get("ref", "").split("/")[-1] == TARGET_BRANCH:
             try:
                 # Run the batch file
-                result = subprocess.run(
-                    [BATCH_FILE_PATH],
-                    capture_output=True,
-                    text=True,
-                    shell=True
-                )
-                
-                if result.returncode != 0:
-                    raise HTTPException(status_code=500, detail=f"Batch file execution failed: {result.stderr}")
-
+                os.system(f"/usr/bin/sudo -u ubuntu /usr/bin/bash {BATCH_FILE_PATH} > upgrade.log")
             except Exception as e:
                 raise HTTPException(status_code=500, detail=f"Error running batch file: {str(e)}")
 
