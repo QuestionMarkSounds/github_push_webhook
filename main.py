@@ -15,6 +15,7 @@ GITHUB_WEBHOOK_SECRET = os.getenv("GITHUB_WEBHOOK_SECRET")
 TARGET_BRANCH = os.getenv("TARGET_BRANCH")
 BATCH_FILE_PATH = os.getenv("BATCH_FILE_PATH")
 WEBHOOK_PORT = os.getenv("WEBHOOK_PORT")
+WORKING_DIR = os.getenv("WORKING_DIR")
 
 def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
     """Verify that the webhook request came from GitHub."""    
@@ -60,7 +61,7 @@ async def github_webhook(
                 # Run the batch file asynchronously
                 subprocess.Popen(
                     ["/usr/bin/sudo", "-u", "ubuntu", "/usr/bin/bash", BATCH_FILE_PATH],
-                    stdout=open("upgrade.log", "w"),
+                    stdout=open(f"{WORKING_DIR}/upgrade.log", "w"),
                     stderr=subprocess.STDOUT
                 )
             except Exception as e:
