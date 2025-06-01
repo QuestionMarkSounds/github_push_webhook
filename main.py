@@ -57,8 +57,12 @@ async def github_webhook(
         # Handle push event
         if payload.get("ref", "").split("/")[-1] == TARGET_BRANCH:
             try:
-                # Run the batch file
-                os.system(f"/usr/bin/sudo -u ubuntu /usr/bin/bash {BATCH_FILE_PATH} > upgrade.log")
+                # Run the batch file asynchronously
+                subprocess.Popen(
+                    ["/usr/bin/sudo", "-u", "ubuntu", "/usr/bin/bash", BATCH_FILE_PATH],
+                    stdout=open("upgrade.log", "w"),
+                    stderr=subprocess.STDOUT
+                )
             except Exception as e:
                 raise HTTPException(status_code=500, detail=f"Error running batch file: {str(e)}")
 
