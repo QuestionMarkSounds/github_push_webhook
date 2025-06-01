@@ -14,6 +14,7 @@ app = FastAPI()
 GITHUB_WEBHOOK_SECRET = os.getenv("GITHUB_WEBHOOK_SECRET")
 TARGET_BRANCH = os.getenv("TARGET_BRANCH")
 BATCH_FILE_PATH = os.getenv("BATCH_FILE_PATH")
+WEBHOOK_PORT = os.getenv("WEBHOOK_PORT")
 
 def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
     """Verify that the webhook request came from GitHub."""    
@@ -82,4 +83,4 @@ async def github_webhook(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=5200)
+    uvicorn.run(app, host="0.0.0.0", port=WEBHOOK_PORT)
